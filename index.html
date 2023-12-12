@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Matcher - Your Resume to Job Description Matching Service</title>
+    <!-- Include pdf.js library -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -114,22 +116,25 @@
         .cover-letter-section {
             margin-top: 2rem;
         }
-        
+
         /* Style the iframe (optional) */
         iframe {
-            border: none; /* Remove iframe border */
-            width: 80%; /* Adjust the width as needed */
-            height: 80%; /* Adjust the height as needed */
+            border: none;
+            /* Remove iframe border */
+            width: 80%;
+            /* Adjust the width as needed */
+            height: 80%;
+            /* Adjust the height as needed */
         }
-            /* Centering the iframe */
+
+        /* Centering the iframe */
         .center-iframe {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* 100% of the viewport height */
+            height: 100vh;
+            /* 100% of the viewport height */
         }
-
-        
     </style>
     </style>
 </head>
@@ -158,8 +163,13 @@
         <label for="jobDescription">Job Description:</label>
         <textarea id="jobDescription" rows="5" cols="50"></textarea>
 
-        <label for="candidateResume">Candidate Resume:</label>
-        <textarea id="candidateResume" rows="5" cols="50"></textarea>
+
+        <form id="pdfForm">
+            <label for="candidateResume">Candidate Resume (paste or select a PDF file):</label>
+            <input type="file" id="pdfFile" accept=".pdf">
+            <textarea id="candidateResume" rows="5" cols="50"></textarea>
+        </form>
+
         <!-- Add a checkbox for cover letter generation -->
         <label for="generateCoverLetter">Generate Cover Letter:</label>
         <input type="checkbox" id="generateCoverLetter" checked>
@@ -174,10 +184,10 @@
                 title="Click the link to open the ChatGPT window. After logging in, paste the copied Job Matcher prompt from your clipboard.">Open
                 ChatGPT window</a>
         </div>
-      
+
         <h2>Prompt for GPT AI analysis (paste it to ChatGPT):</h2>
-      
-    
+
+
         <div id="output"></div>
 
 
@@ -250,6 +260,53 @@ Provide your responses in a clear and concise manner.
             } catch (error) {
                 console.error('Error:', error);
                 outputDiv.textContent = 'An error occurred while processing the request.';
+            }
+        });
+
+
+
+        //Handle input of resume from PDf
+        // Specify the workerSrc property for pdf.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+
+        document.getElementById('pdfFile').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+
+            if (file && file.type === 'application/pdf') {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const arrayBuffer = e.target.result;
+
+                    // Load PDF using pdf.js
+                    pdfjsLib.getDocument({ data: arrayBuffer }).promise.then(function (pdf) {
+                        // Loop through each page and extract text
+                        let textContent = '';
+                        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+
+
+                            pdf.getPage(pageNum).then(function (page) {
+                                return page.getTextContent();
+                            }).then(function (pageText) {
+                                // Combine text from all pages
+                                let tmpContent = '';
+                                tmpContent += pageText.items.map(item => item.str + '').join('') + '\n';
+                                tmpContent += textContent;
+                                textContent = tmpContent;
+                                //textContent += pageText.items.map(item => item.str + ' ').join('');
+
+                                // Display the combined text in the textarea
+                                document.getElementById('candidateResume').value = textContent.trim();
+                            });
+                        }
+                    });
+                };
+
+                reader.readAsArrayBuffer(file);
+            } else {
+                alert('Please select a valid PDF file.');
+                // Clear the input field
+                document.getElementById('pdfFile').value = '';
             }
         });
     </script>
