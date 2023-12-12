@@ -161,13 +161,13 @@
         <h1>Job Matching Tool with GPT-3.5</h1>
 
         <label for="jobDescription">Job Description:</label>
-        <textarea id="jobDescription" rows="5" cols="50"></textarea>
+        <textarea id="jobDescription" rows="5" cols="50">Paste Job description here...</textarea>
 
 
         <form id="pdfForm">
             <label for="candidateResume">Candidate Resume (paste or select a PDF file):</label>
             <input type="file" id="pdfFile" accept=".pdf">
-            <textarea id="candidateResume" rows="5" cols="50"></textarea>
+            <textarea id="candidateResume" rows="5" cols="50">Paste your resume here or select a PDF file...</textarea>
         </form>
 
         <!-- Add a checkbox for cover letter generation -->
@@ -181,8 +181,8 @@
         </div>
         <div style="text-align: center;">
             <a href="https://chat.openai.com/" target="_blank"
-                title="Click the link to open the ChatGPT window. After logging in, paste the copied Job Matcher prompt from your clipboard.">Open
-                ChatGPT window</a>
+                title="Click the link to open ChatGPT window. After logging in, paste the copied Job Matcher prompt from your clipboard (press Ctrl-V).">===>>>    Open
+                ChatGPT window    <<<===</a>
         </div>
 
         <h2>Prompt for GPT AI analysis (paste it to ChatGPT):</h2>
@@ -196,7 +196,7 @@
     <script>
 
 
-        const myResume = '';
+        const myResume = 'Paste your resume here or select a PDF file...';
 
 
         const matchButton = document.getElementById('matchButton');
