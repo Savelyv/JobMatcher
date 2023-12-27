@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Matcher - Your Resume to Job Description Matching Service powered by AI</title>
+    <title>Job Matcher - Your Resume to Job Description Matching Service</title>
     <!-- Include pdf.js library -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.js"></script>
     <style>
@@ -142,7 +142,7 @@
 <body>
     <header>
         <h1>Job Matcher</h1>
-        <p class="white-text">Matching Resume to Job Description in 5 easy steps powered by AI</p>
+        <p class="white-text">Matching Resume to Job Description in 5 easy steps</p>
         <p class="white-text">&copy; 2023 Job Matcher. All rights reserved.</p>
 
         <a
@@ -171,9 +171,31 @@
         </form>
 
         <!-- Add a checkbox for cover letter generation -->
-        <label for="generateCoverLetter">Generate Cover Letter:</label>
         <input type="checkbox" id="generateCoverLetter" checked>
-
+        <label for="generateCoverLetter">Generate Cover Letter</label>
+        <br>
+        <!-- Add a checkbox for cehcking CV correctness -->
+        <input type="checkbox" id="checkCVErrors" checked>
+        <label for="checkCVErors">Check CV Errors and CV effectiveness</label>
+        <br>
+        <!-- Add a checkbox for bettering experiense -->
+        <input type="checkbox" id="betterExperience" checked>
+        <label for="betterExperience">Suggest better experience desription (outcome-focused and metric-oriented)</label>
+        <br>
+        <!-- Add a checkbox for adding keywords -->
+        <input type="checkbox" id="includeKeywords" checked>
+        <label for="includeKeywords">Tailor my resume so it will include all relevant keywords from the job description
+        </label>
+        <br>
+        <!-- Add a checkbox for screening interview questions -->
+        <input type="checkbox" id="screeningQuestions" checked>
+        <label for="screeningQuestions">Generate 10 screening questions (first phone screening interview)</label>
+        <br>
+        
+        <!-- Add a checkbox for technical questions -->
+        <input type="checkbox" id="technicalQuestions" checked>
+        <label for="technicalQuestions">Generate technical questions based on Job description</label>
+        <br>
         <!-- Modify the button label -->
 
         <div style="display: flex; justify-content: center; align-items: center;">
@@ -181,8 +203,9 @@
         </div>
         <div style="text-align: center;">
             <a href="https://chat.openai.com/" target="_blank"
-                title="Click the link to open ChatGPT window. After logging in, paste the copied Job Matcher prompt from your clipboard (press Ctrl-V).">===>>>    Open
-                ChatGPT window    <<<===</a>
+                title="Click the link to open ChatGPT window. After logging in, paste the copied Job Matcher prompt from your clipboard (press Ctrl-V).">===>>>
+                Open
+                ChatGPT window <<<=== </a>
         </div>
 
         <h2>Prompt for GPT AI analysis (paste it to ChatGPT):</h2>
@@ -192,124 +215,8 @@
 
 
     </div>
+    <script src="script.js"></script>
 
-    <script>
-
-
-        const myResume = 'Paste your resume here or select a PDF file...';
-
-
-        const matchButton = document.getElementById('matchButton');
-        const jobDescriptionInput = document.getElementById('jobDescription');
-
-        const candidateResumeInput = document.getElementById('candidateResume');
-
-        document.getElementById('candidateResume').textContent = myResume;
-        const outputDiv = document.getElementById('output');
-        const generateCoverLetterCheckbox = document.getElementById('generateCoverLetter'); // Get the checkbox element
-
-
-        matchButton.addEventListener('click', async () => {
-            const jobDescription = jobDescriptionInput.value;
-            const candidateResume = candidateResumeInput.value;
-            const isCoverLetter = generateCoverLetter.checked;
-
-            try {
-                const textarea = document.createElement('textarea');
-                /*                
-                                let prompt = `Job Description: ${jobDescription}\nCandidate Resume: ${candidateResume}\nProvide the answer in the following sections (as numbered list - use the numbers from the section description), bullets for other infomration): 
-                                1. Is the candidate a good match for the job? 
-                                2. List skills that are a good match and skills that are required by the job description but not mentioned in the resume. Provides both skills list as bulleted lists.  
-                                3. List the number of years of experience based on the resume. 
-                                4. Summarize years of experience for professional skills.  
-                                5. Specify howl long worked in each company, and indicate employment periods of less than 2 years, indicate gaps in the employment. 
-                                6. Indicate if the candidate got promoted in the same company or changed positions in the same company.`;
-                */
-
-                let prompt = `**Job Description:**
-${jobDescription}
-**Candidate Resume:**
-${candidateResume}
-**Assume you are a recruiter. Please provide your analysis in the following sections (use numbers for clarity), and use bullet points for additional details where necessary:**
-1. **Overall Match:** Assess whether the candidate is a good fit for the job.
-2. **Skills Assessment:** 
-   - List skills in the candidate's resume that match the job description.
-   - Identify skills required by the job description but not found in the resume.
-3. **Years of Experience:** Calculate the total years of relevant experience based on the candidate's resume.
-4. **Professional Experience Summary:** Summarize the years of experience for each professional skill or role mentioned. Provide the number of years.
-5. **Employment History:** 
-   - Specify the duration of employment at each company in years.
-   - Highlight any employment periods lasting less than 2 years.
-   - Identify any gaps in the candidate's employment history.
-6. **Promotions and Position Changes:** Indicate if the candidate has received promotions or changed positions within the same company.
-Provide your responses in a clear and concise manner.
-`;
-
-                if (isCoverLetter) {
-                    // If the checkbox is checked, add the cover letter generation part to the prompt
-                    prompt += `\n7. **Cover Letter:** Generate a short cover letter in simple english and limit it to 100 words. include it here. Use the candidate's name from the resume in the signature.`;
-                }
-                textarea.value = prompt;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                outputDiv.textContent = prompt;
-
-                alert('Prompt copied to clipboard! Open ChatGPT window and paste it there.');
-            } catch (error) {
-                console.error('Error:', error);
-                outputDiv.textContent = 'An error occurred while processing the request.';
-            }
-        });
-
-
-
-        //Handle input of resume from PDf
-        // Specify the workerSrc property for pdf.js
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
-
-        document.getElementById('pdfFile').addEventListener('change', function (e) {
-            const file = e.target.files[0];
-
-            if (file && file.type === 'application/pdf') {
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    const arrayBuffer = e.target.result;
-
-                    // Load PDF using pdf.js
-                    pdfjsLib.getDocument({ data: arrayBuffer }).promise.then(function (pdf) {
-                        // Loop through each page and extract text
-                        let textContent = '';
-                        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-
-
-                            pdf.getPage(pageNum).then(function (page) {
-                                return page.getTextContent();
-                            }).then(function (pageText) {
-                                // Combine text from all pages
-                                let tmpContent = '';
-                                tmpContent += pageText.items.map(item => item.str + '').join('') + '\n';
-                                tmpContent += textContent;
-                                textContent = tmpContent;
-                                //textContent += pageText.items.map(item => item.str + ' ').join('');
-
-                                // Display the combined text in the textarea
-                                document.getElementById('candidateResume').value = textContent.trim();
-                            });
-                        }
-                    });
-                };
-
-                reader.readAsArrayBuffer(file);
-            } else {
-                alert('Please select a valid PDF file.');
-                // Clear the input field
-                document.getElementById('pdfFile').value = '';
-            }
-        });
-    </script>
 </body>
 
 </html>
